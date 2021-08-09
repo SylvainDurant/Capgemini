@@ -1,0 +1,27 @@
+{
+  "name": "capgemini",
+  "version": "1.0.0",
+  "description": "Back-end coding assignment for Capgemini",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SylvainDurant/Capgemini.git"
+  },
+  "author": "Sylvain Durant",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SylvainDurant/Capgemini/issues"
+  },
+  "homepage": "https://github.com/SylvainDurant/Capgemini#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.13.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
