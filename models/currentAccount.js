@@ -3,7 +3,8 @@ let Schema = mongoose.Schema;
 
 let CurrentAccountSchema = new Schema({
     userInformations: {
-        type: Schema.Types.ObjectId
+        type: Schema.Types.ObjectId,
+        ref: "Customer"
     },
     credit: { 
         type: Number,
