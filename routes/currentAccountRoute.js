@@ -1,5 +1,7 @@
 const express = require('express');
+const app = express();
 const router = express.Router();
+const axios = require('axios').default;
 const CurrentAccount = require("../models/currentAccount");
 const Customers = require("../models/customers");
 
@@ -16,7 +18,7 @@ router.post('/newCurrentAccount', (req, res) => {
                 return res.send("There is no existing customer with this id.");
             } else {
                 // check if customer already have a account
-                CurrentAccount.find({userInformations: customer._id}).then((account) => {
+                CurrentAccount.find({userInformations: customer._id}).then( async (account) => {
                     if (account.length != 0) { 
                         res.send("This customer already has a account: "+ account)
                     } else {
@@ -25,13 +27,28 @@ router.post('/newCurrentAccount', (req, res) => {
                             userInformations: customer._id
                         });
 
+                        // save the account in the db
                         new_account.save((error) => {
                             if (error) {
                                 return res.send(error);
                             }
-
-                            res.sendStatus(200);
                         })
+
+                        // transaction
+                        if (initialCredit > 0) {
+                            // call the api's endpoint for transactions
+                            await axios.put(`http://${req.headers.host}/api/transaction/newTransaction`, req.body)
+                                .then((response) => {
+                                    if (response.status === 200) {
+                                        res.sendStatus(200);
+                                    } else {
+                                        res.send("Transaction error: " + response.status);
+                                    }
+                                })
+                                .catch((error) => {
+                                    res.send(error);
+                            });
+                        }
                     }
                 })
             }

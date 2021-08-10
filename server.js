@@ -4,7 +4,8 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const currentAccountRoutes = require('./routes/currentAccountRoute');
+const currentAccountRoute = require('./routes/currentAccountRoute');
+const transactionRoute = require('./routes/transactionRoute');
   
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -13,11 +14,15 @@ app.use(express.json());
 require('./config/db')();
 
 ///// Routes /////
-app.use('/api/currentAccount', currentAccountRoutes)
+app.use('/api/currentAccount', currentAccountRoute)
+app.use('/api/transaction', transactionRoute)
 
 app.listen(port, () => console.log(`Server running on ${port}`));
 
 ///// Middleware /////
+app.use('/api/redirect', (req, res) => {
+    console.log(req.body);
+});
 app.use(function(req, res) {
     res.status(404).send({url: req.originalUrl + ' not found'})
 });
