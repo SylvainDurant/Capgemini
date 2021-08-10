@@ -3,6 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
+
+const currentAccountRoutes = require('./routes/currentAccountRoute');
   
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -11,9 +13,9 @@ app.use(express.json());
 require('./config/db')();
 
 ///// Routes /////
-app.use('/api/', Routes)
+app.use('/api/currentAccount', currentAccountRoutes)
 
-app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+app.listen(port, () => console.log(`Server running on ${port}`));
 
 ///// Middleware /////
 app.use(function(req, res) {
