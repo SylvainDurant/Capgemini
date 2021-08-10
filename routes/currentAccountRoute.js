@@ -4,6 +4,18 @@ const axios = require('axios').default;
 const CurrentAccount = require("../models/currentAccount");
 const Customers = require("../models/customers");
 
+///// GET REQUESTS /////
+router.get('/userInformations/:id', (req, res) => {
+    const accountID = req.params.id
+
+    CurrentAccount.findById(accountID).populate("userInformations Transactions").exec((error, account) => {
+        if (error) { return res.send(error); }
+
+        res.send(account);
+    })
+});
+
+///// POST REQUESTS /////
 router.post('/newCurrentAccount', (req, res) => {
     const {customerID,initialCredit} = req.body;
 
@@ -34,7 +46,7 @@ router.post('/newCurrentAccount', (req, res) => {
                         })
 
                         // transaction
-                        if (initialCredit > 0) {
+                        if (initialCredit != 0) {
                             // call the api's endpoint for transactions
                             await axios.put(`http://${req.headers.host}/api/transaction/newTransaction`,{
                                 "accountID": new_account._id,
@@ -42,7 +54,7 @@ router.post('/newCurrentAccount', (req, res) => {
                             })
                                 .then((response) => {
                                     if (response.status === 200) {
-                                        res.sendStatus(200);
+                                        res.status(200).send(new_account._id);
                                     } else {
                                         res.send("Transaction error: " + response.status);
                                     }
@@ -50,6 +62,8 @@ router.post('/newCurrentAccount', (req, res) => {
                                 .catch((error) => {
                                     res.send(error);
                             });
+                        } else {
+                            res.status(200).send(new_account._id);
                         }
                     }
                 })

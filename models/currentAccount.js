@@ -4,7 +4,7 @@ let Schema = mongoose.Schema;
 let CurrentAccountSchema = new Schema({
     userInformations: {
         type: Schema.Types.ObjectId,
-        ref: "Customer"
+        ref: "Customers"
     },
     credit: { 
         type: Number,
