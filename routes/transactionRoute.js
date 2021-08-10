@@ -4,7 +4,7 @@ const CurrentAccount = require("../models/currentAccount");
 const Transaction = require('../models/transaction');
 
 router.put('/newTransaction', (req, res) => {
-    const {accountID,transactionValue} = req.body;
+    const {accountID, transactionValue} = req.body;
 
     // prepare the transaction
     let transaction = Transaction({
@@ -12,7 +12,8 @@ router.put('/newTransaction', (req, res) => {
     })
 
     // find the account and make the transaction
-    try { CurrentAccount.findOneAndUpdate({"userInformations": accountID}, {
+    try { CurrentAccount.findOneAndUpdate({"_id": accountID}, {
+            // credit: transactionValue,
             $inc : {'credit' : transactionValue},
             $push: {Transactions: transaction._id}
         }, (error) => {
