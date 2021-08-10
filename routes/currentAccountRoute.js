@@ -48,7 +48,10 @@ router.post('/newCurrentAccount', (req, res) => {
                         // transaction
                         if (initialCredit != 0) {
                             // call the api's endpoint for transactions
-                            await axios.put(`http://${req.headers.host}/api/transaction/initialCreditTransaction`, req.body)
+                            await axios.put(`http://${req.headers.host}/api/transaction/newTransaction`,{
+                                "accountID": new_account._id,
+                                "transactionValue": initialCredit 
+                            })
                                 .then((response) => {
                                     if (response.status === 200) {
                                         res.status(200).send(new_account._id);
