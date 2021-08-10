@@ -3,17 +3,17 @@ const router = express.Router();
 const CurrentAccount = require("../models/currentAccount");
 const Transaction = require('../models/transaction');
 
-router.put('/initialCreditTransaction', (req, res) => {
-    const {customerID,initialCredit} = req.body;
+router.put('/newTransaction', (req, res) => {
+    const {accountID,transactionValue} = req.body;
 
     // prepare the transaction
     let transaction = Transaction({
-        value: initialCredit
+        value: transactionValue
     })
 
     // find the account and make the transaction
-    try { CurrentAccount.findOneAndUpdate({"userInformations": customerID}, {
-            credit: initialCredit,
+    try { CurrentAccount.findOneAndUpdate({"userInformations": accountID}, {
+            $inc : {'credit' : transactionValue},
             $push: {Transactions: transaction._id}
         }, (error) => {
             if (error) { 
