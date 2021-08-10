@@ -47,6 +47,8 @@ router.post('/newCurrentAccount', (req, res) => {
                                 .catch((error) => {
                                     res.send(error);
                             });
+                        } else {
+                            res.sendStatus(200);
                         }
                     }
                 })
