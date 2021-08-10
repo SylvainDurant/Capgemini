@@ -11,7 +11,7 @@ router.post('/newCurrentAccount', (req, res) => {
     if (customerID.match(/^[0-9a-fA-F]{24}$/)) {
         // find the already existing customer
         try { Customers.findById(customerID).exec((error, customer) => {
-            if (error) { console.error(error); }
+            if (error) { return res.send(error); }
 
             if (!customer) {
                 return res.send("There is no existing customer with this id.");
@@ -52,7 +52,7 @@ router.post('/newCurrentAccount', (req, res) => {
                 })
             }
         })} catch (error) {
-            console.log(error);
+            res.send(error);
         }
     } else {
         return res.send("This id is not valid.");
