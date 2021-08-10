@@ -13,7 +13,6 @@ router.put('/newTransaction', (req, res) => {
 
     // find the account and make the transaction
     try { CurrentAccount.findOneAndUpdate({"_id": accountID}, {
-            // credit: transactionValue,
             $inc : {'credit' : transactionValue},
             $push: {Transactions: transaction._id}
         }, (error) => {
