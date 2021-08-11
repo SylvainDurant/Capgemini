@@ -3,12 +3,13 @@ const router = express.Router();
 const axios = require('axios').default;
 const CurrentAccount = require("../models/currentAccount");
 const Customers = require("../models/customers");
+const generateAccountNumber = require('../config/accountNumber');
 
 ///// GET REQUESTS /////
 router.get('/userInformations/:id', (req, res) => {
     const accountID = req.params.id
 
-    CurrentAccount.findById(accountID).populate("userInformations Transactions").exec((error, account) => {
+    CurrentAccount.findById(accountID).populate("userInformations transactions").exec((error, account) => {
         if (error) { return res.send(error); }
 
         res.send(account);
@@ -33,9 +34,13 @@ router.post('/newCurrentAccount', (req, res) => {
                     if (account.length != 0) { 
                         res.send("This customer already has a account: "+ account)
                     } else {
+                        // generate account's number
+                        let accountNumber = await generateAccountNumber()
+
                         // asign the customer to an account
                         let new_account = new CurrentAccount({
-                            userInformations: customer._id
+                            userInformations: customer._id,
+                            accountNumber: accountNumber
                         });
 
                         // save the account in the db
@@ -46,21 +51,22 @@ router.post('/newCurrentAccount', (req, res) => {
                         })
 
                         // transaction
-                        if (initialCredit != 0) {
+                        if (initialCredit > 0) {
                             // call the api's endpoint for transactions
                             await axios.put(`http://${req.headers.host}/api/transaction/newTransaction`,{
-                                "accountID": new_account._id,
+                                "sender": "initial",
+                                "receiver": new_account.accountNumber,
                                 "transactionValue": initialCredit 
                             })
-                                .then((response) => {
-                                    if (response.status === 200) {
-                                        res.status(200).send(new_account._id);
-                                    } else {
-                                        res.send("Transaction error: " + response.status);
-                                    }
-                                })
-                                .catch((error) => {
-                                    res.send(error);
+                            .then((response) => {
+                                if (response.status === 200) {
+                                    res.status(200).send(new_account._id);
+                                } else {
+                                    res.send("Transaction error: " + response.status);
+                                }
+                            })
+                            .catch((error) => {
+                                res.send(error);
                             });
                         } else {
                             res.status(200).send(new_account._id);
