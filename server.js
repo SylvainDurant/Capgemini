@@ -20,9 +20,6 @@ app.use('/api/transaction', transactionRoute)
 app.listen(port, () => console.log(`Server running on ${port}`));
 
 ///// Middleware /////
-app.use('/api/redirect', (req, res) => {
-    console.log(req.body);
-});
 app.use(function(req, res) {
     res.status(404).send({url: req.originalUrl + ' not found'})
 });

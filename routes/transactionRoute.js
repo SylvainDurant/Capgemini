@@ -4,34 +4,46 @@ const CurrentAccount = require("../models/currentAccount");
 const Transaction = require('../models/transaction');
 
 router.put('/newTransaction', (req, res) => {
-    const {accountID, transactionValue} = req.body;
+    const {sender, receiver, transactionValue} = req.body;
+
+    if (transactionValue < 0) {return res.send("Transaction value must be greater than 0");}
 
     // prepare the transaction
-    let transaction = Transaction({
-        value: transactionValue
+    let transaction = new Transaction({
+        value: transactionValue,
+        sender: sender, 
+        receiver: receiver
     })
 
-    // find the account and make the transaction
-    try { CurrentAccount.findOneAndUpdate({"_id": accountID}, {
-            $inc : {'credit' : transactionValue},
-            $push: {Transactions: transaction._id}
-        }, (error) => {
-            if (error) { 
-                res.send(error);
-            }else{
-                // save the transaction
-                transaction.save((error) => {
-                    if (error) {
-                        return res.send(error);
-                    }
-                })
+    // find receiver transaction
+    CurrentAccount.findOne({"accountNumber": receiver}).then( async (receiverAccount) => {
+        if (!receiverAccount) {
+            return res.send("This account does not exist.")
+        } else {
+            if (sender != "initial") {
+                let valueToSend = transactionValue * -1;
 
-                res.sendStatus(200);
+                // make the transaction on the sender account
+                await CurrentAccount.findOneAndUpdate({"accountNumber": sender}, {
+                    $inc : {'credit' : (valueToSend)},
+                    $addToSet: {transactions: transaction._id}
+                })
             }
+
+            // make the transaction to the receiver account
+            await CurrentAccount.findOneAndUpdate({"accountNumber": receiver}, {
+                $inc : {'credit' : transactionValue},
+                $addToSet: {transactions: transaction._id}
+            })
+
+            // save the transaction
+            transaction.save((error) => {
+                if (error) {return res.send(error);}
+            })
+
+            res.sendStatus(200);
         }
-    )} catch (error) {
-        res.send(error);
-    }
+    })
 });
 
 module.exports = router;

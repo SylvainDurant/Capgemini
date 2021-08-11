@@ -10,11 +10,15 @@ let CurrentAccountSchema = new Schema({
         type: Number,
         default: 0
     },
-    Transactions: [{
+    transactions: [{
         type: Schema.Types.ObjectId,
         ref: "Transaction",
         default: []
-    }]
+    }],
+    accountNumber: {
+        type: String,
+        unique: true
+    }
 });
 
 let CurrentAccount = mongoose.model("CurrentAccount", CurrentAccountSchema);
