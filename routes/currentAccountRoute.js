@@ -34,7 +34,7 @@ router.post('/newCurrentAccount', (req, res) => {
                 // check if customer already have a account
                 CurrentAccount.find({userInformations: customer._id}).then( async (account) => {
                     if (account.length != 0) { 
-                        res.send("This customer already has a account: "+ account)
+                        res.send("This customer already has a account: "+ account.accountNumber)
                     } else {
                         // generate account's number
                         let accountNumber = await generateAccountNumber()
