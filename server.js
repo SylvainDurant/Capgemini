@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000;
 const currentAccountRoute = require('./routes/currentAccountRoute');
 const transactionRoute = require('./routes/transactionRoute');
   
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }, {useNewUrlParser: true}));
 app.use(express.json());
 
 ///// Mongoose /////
