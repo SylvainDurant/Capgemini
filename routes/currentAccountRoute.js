@@ -6,7 +6,7 @@ const Customers = require("../models/customers");
 const generateAccountNumber = require('../config/accountNumber');
 
 ///// GET REQUESTS /////
-router.get('/userInformations/:accountNumber', (req, res) => {
+router.get('/accountInformations/:accountNumber', (req, res) => {
     const accountNumber = req.params.accountNumber
 
     CurrentAccount.findOne({"accountNumber": accountNumber}).populate("userInformations transactions").then((account) => {
