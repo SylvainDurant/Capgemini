@@ -6,13 +6,15 @@ const Customers = require("../models/customers");
 const generateAccountNumber = require('../config/accountNumber');
 
 ///// GET REQUESTS /////
-router.get('/userInformations/:id', (req, res) => {
-    const accountID = req.params.id
+router.get('/userInformations/:accountNumber', (req, res) => {
+    const accountNumber = req.params.accountNumber
 
-    CurrentAccount.findById(accountID).populate("userInformations transactions").exec((error, account) => {
-        if (error) { return res.send(error); }
-
-        res.send(account);
+    CurrentAccount.findOne({"accountNumber": accountNumber}).populate("userInformations transactions").then((account) => {
+        if (!account) {
+            return res.send("This account does not exist.");
+        } else {
+            res.send(account);
+        }
     })
 });
 
