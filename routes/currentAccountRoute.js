@@ -11,7 +11,7 @@ router.get('/userInformations/:accountNumber', (req, res) => {
 
     CurrentAccount.findOne({"accountNumber": accountNumber}).populate("userInformations transactions").then((account) => {
         if (!account) {
-            return res.send("This account does not exist.");
+            return res.send({error:"This account does not exist."});
         } else {
             res.send(account);
         }
@@ -29,7 +29,7 @@ router.post('/newCurrentAccount', (req, res) => {
             if (error) { return res.send(error); }
 
             if (!customer) {
-                return res.send("There is no existing customer with this id.");
+                return res.send({error:"There is no existing customer with this id."});
             } else {
                 // check if customer already have a account
                 CurrentAccount.find({userInformations: customer._id}).then( async (account) => {
@@ -80,7 +80,7 @@ router.post('/newCurrentAccount', (req, res) => {
             res.send(error);
         }
     } else {
-        return res.send("This id is not valid.");
+        return res.send({error:"This id is not valid."});
     }
 });
 
