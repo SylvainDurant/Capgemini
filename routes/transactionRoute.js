@@ -14,45 +14,45 @@ router.put('/newTransaction', (req, res) => {
             return res.send({error:"This account does not exist."})
         } else if (senderAccount.credit < transactionValue) {
             return res.send({error:"insufficient funds"})
-        } else {
-            // prepare the transaction
-            let transaction = new Transaction({
-                value: transactionValue,
-                sender: sender, 
-                receiver: receiver
-            })
-
-            // find receiver transaction
-            CurrentAccount.findOne({"accountNumber": receiver}).then( async (receiverAccount) => {
-                if (!receiverAccount) {
-                    return res.send({error:"This account does not exist."})
-                } else {
-                    if (sender != "initial") {
-                        let valueToSend = transactionValue * -1;
-
-                        // make the transaction on the sender account
-                        await CurrentAccount.findOneAndUpdate({"accountNumber": sender}, {
-                            $inc : {'credit' : (valueToSend)},
-                            $addToSet: {transactions: transaction._id}
-                        })
-                    }
-
-                    // make the transaction to the receiver account
-                    await CurrentAccount.findOneAndUpdate({"accountNumber": receiver}, {
-                        $inc : {'credit' : transactionValue},
-                        $addToSet: {transactions: transaction._id}
-                    })
-
-                    // save the transaction
-                    transaction.save((error) => {
-                        if (error) {return res.send(error);}
-                    })
-
-                    res.sendStatus(200);
-                }
-            })
         }
     });
+
+    // prepare the transaction
+    let transaction = new Transaction({
+        value: transactionValue,
+        sender: sender, 
+        receiver: receiver
+    })
+
+    // find receiver transaction
+    CurrentAccount.findOne({"accountNumber": receiver}).then( async (receiverAccount) => {
+        if (!receiverAccount) {
+            return res.send({error:"This account does not exist."})
+        } else {
+            if (sender != "initial") {
+                let valueToSend = transactionValue * -1;
+
+                // make the transaction on the sender account
+                await CurrentAccount.findOneAndUpdate({"accountNumber": sender}, {
+                    $inc : {'credit' : (valueToSend)},
+                    $addToSet: {transactions: transaction._id}
+                })
+            }
+
+            // make the transaction to the receiver account
+            await CurrentAccount.findOneAndUpdate({"accountNumber": receiver}, {
+                $inc : {'credit' : transactionValue},
+                $addToSet: {transactions: transaction._id}
+            })
+
+            // save the transaction
+            transaction.save((error) => {
+                if (error) {return res.send(error);}
+            })
+
+            res.sendStatus(200);
+        }
+    })
 });
 
 module.exports = router;
