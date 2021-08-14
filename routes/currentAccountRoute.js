@@ -30,10 +30,10 @@ router.post('/newCurrentAccount', (req, res) => {
             return res.send({error:"There is no existing customer with this id."});
         } else {
             // check if customer already have a account
-            CurrentAccount.find({userInformations: customer._id}).then( async (account) => {
-                if (account.length != 0) { 
-                    res.send("This customer already has an account: "+ account.accountNumber)
-                } else {
+            // CurrentAccount.find({userInformations: customer._id}).then( async (account) => {
+            //     if (account.length != 0) { 
+            //         res.send("This customer already has an account: "+ account.accountNumber)
+            //     } else {
                     // generate account's number
                     let accountNumber = await generateAccountNumber()
 
@@ -71,8 +71,8 @@ router.post('/newCurrentAccount', (req, res) => {
                     } else {
                         res.send({accountNumber: new_account.accountNumber});
                     }
-                }
-            })
+            //     }
+            // })
         }
     })} catch (error) {
         res.send(error);
