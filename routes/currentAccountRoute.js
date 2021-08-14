@@ -18,6 +18,19 @@ router.get('/accountInformations/:accountNumber', (req, res) => {
     })
 });
 
+///// GET REQUESTS /////
+router.get('/accountInformations/mongo/:accountNumber', (req, res) => {
+    const accountNumber = req.params.accountNumber
+
+    CurrentAccount.findOne({"accountNumber": accountNumber}).populate("userInformations transactions").then((account) => {
+        if (!account) {
+            return res.send({error:"This account does not exist."});
+        } else {
+            res.send(account);
+        }
+    })
+});
+
 ///// POST REQUESTS /////
 router.post('/newCurrentAccount', (req, res) => {
     const {customerID,initialCredit} = req.body;
