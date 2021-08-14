@@ -46,9 +46,7 @@ router.put('/newTransaction', (req, res) => {
             })
 
             // save the transaction
-            transaction.save((error) => {
-                if (error) {return res.send(error);}
-            })
+            transaction.save();
 
             res.send(transaction);
         }
