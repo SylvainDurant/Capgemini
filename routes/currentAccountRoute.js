@@ -48,17 +48,19 @@ router.post('/newCurrentAccount', (req, res) => {
                     "transactionValue": initialCredit 
                 })
                 .then((response) => {
-                    if (response.status === 200) {
-                        res.send({accountNumber: new_account.accountNumber});
+                    if (response.error) {
+                        res.send({error: response.error});
                     } else {
-                        res.send("Transaction error: " + response.status);
+                        //add transaction to array of transactions
+                        new_account.transactions.push(transaction._id)
+                        res.send(new_account);
                     }
                 })
                 .catch((error) => {
                     res.send(error);
                 });
             } else {
-                res.send({accountNumber: new_account.accountNumber});
+                res.send(new_account);
             }
 
         }

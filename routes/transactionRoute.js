@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const CurrentAccount = require("../models/currentAccount");
 const Transaction = require('../models/transaction');
 
 router.put('/newTransaction', (req, res) => {
@@ -13,6 +12,11 @@ router.put('/newTransaction', (req, res) => {
         value: transactionValue,
         sender: sender,
         receiver: receiver
+    })
+
+    // save the transaction
+    transaction.save((error) => {
+        if (error) {return res.send(error);}
     })
 
     // send back the transaction
