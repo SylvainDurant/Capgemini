@@ -50,7 +50,7 @@ router.put('/newTransaction', (req, res) => {
                 if (error) {return res.send(error);}
             })
 
-            res.sendStatus(200);
+            res.send(transaction);
         }
     })
 });

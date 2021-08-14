@@ -60,7 +60,7 @@ router.post('/newCurrentAccount', (req, res) => {
                         })
                         .then((response) => {
                             if (response.status === 200) {
-                                res.status(200).send(new_account.accountNumber);
+                                res.send({accountNumber: new_account.accountNumber});
                             } else {
                                 res.send("Transaction error: " + response.status);
                             }
@@ -69,7 +69,7 @@ router.post('/newCurrentAccount', (req, res) => {
                             res.send(error);
                         });
                     } else {
-                        res.status(200).send(new_account.accountNumber);
+                        res.send({accountNumber: new_account.accountNumber});
                     }
                 }
             })
