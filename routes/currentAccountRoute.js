@@ -24,8 +24,11 @@ router.get('/accountInformations/:accountNumber', (req, res) => {
 router.post('/newCurrentAccount', (req, res) => {
     const {customerID,initialCredit} = req.body;
 
-    if (!customerID) { return res.send({error:"provide a valid customer ID."}); }
-    if (!initialCredit) { return res.send({error:"provide a valid initial credit."}); }
+    if (!customerID || customerID.length != 24) { return res.send({error:"provide a valid customer ID."}); }
+    // 24 being the length of a customer ID
+    if (!initialCredit || typeof initialCredit != "number" || initialCredit < 0) { 
+        return res.send({error:"Initial credit must be a nonnegative integer."}); 
+    }
 
     // find the already existing customer
     try { Customers.findById(customerID).exec( async (error, customer) => {
