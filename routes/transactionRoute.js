@@ -8,7 +8,10 @@ router.put('/newTransaction', (req, res) => {
 
     if (!sender) { return res.send({error:"Provide a valid account number for sender."}); }
     if (!receiver) { return res.send({error:"Provide a valid account number for receiver."}); }
-    if (!transactionValue || (transactionValue < 0)) { return res.send({error:"Transaction value must be an integer greater than 0"}); }
+    if (!transactionValue || typeof transactionValue != "number" || (transactionValue < 0)) { 
+        return res.send({error:"Transaction value must be an integer greater than 0"}); 
+    }
+    if (sender == receiver) { return res.send({error:"Sender and receiver cannot be the same account."}); }
 
     const makeTransaction = () => {
         // prepare the transaction
