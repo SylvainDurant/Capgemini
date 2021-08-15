@@ -28,12 +28,12 @@ Id | first name | last name
 #### /api/currentAccount/accountInformations/<:accountNumber>
 Finds account and populate userInformations and transactions.
 
-#### Parameters
+#### Parameters:
 **accountNumber**: string
 
 account's number assigned to it upon creation.
 
-#### Response
+#### Response:
 **unsuccessful operation**
 ```
     {"error": "errorMessage"}
@@ -69,7 +69,7 @@ if there is no transactions, then `transactions` array is empty.
 #### /api/currentAccount/newCurrentAccount
 Create a new account linked to customer and return it's account number. Only customer and transaction(s) id are stored for later population.
 
-#### Parameters
+#### Parameters:
 **body**: object
 customer's id and he's initial credit. 
 Parameter content type: `JSON`
@@ -82,7 +82,7 @@ Parameter content type: `JSON`
 if there is no initial credit, enter 0.
 if there is an initial credit, the endpoint will call himself the transaction endpoint during the account creation proccess. 
 
-#### Response
+#### Response:
 **unsuccessful operation**
 ```
     {"error": "errorMessage"}
@@ -99,7 +99,7 @@ In the original version of this API, a verification was made before the account 
 #### /api/currentAccount/newCurrentAccount
 Create a new transaction and implement it both to the sender and the receiver accounts. Only value greater than 0 is accepted and a account cannot send a transaction to himself. Both of the accounts must already exist.
 
-#### Parameters
+#### Parameters:
 **body**: object
 Sender's account number, receiver's account number and the value of the transaction.
 Parameter content type: `JSON`
@@ -111,7 +111,7 @@ Parameter content type: `JSON`
     }
 ```
 
-#### Response
+#### Response:
 **unsuccessful operation**
 ```
     {"error": "errorMessage"}
