@@ -23,8 +23,6 @@ router.get('/accountInformations/:accountNumber', (req, res) => {
 ///// POST REQUESTS /////
 router.post('/newCurrentAccount', (req, res) => {
     const {customerID,initialCredit} = req.body;
-    console.log(req.body);
-    console.log(customerID, initialCredit);
 
     if (!customerID || customerID.length != 24) { return res.send({error:"provide a valid customer ID."}); }
     // 24 being the length of a customer ID
