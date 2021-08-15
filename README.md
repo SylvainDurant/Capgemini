@@ -30,6 +30,7 @@ Finds account and populate userInformations and transactions.
 
 #### Parameters
 **accountNumber**: string
+
 account's number assigned to it upon creation.
 
 #### Response
