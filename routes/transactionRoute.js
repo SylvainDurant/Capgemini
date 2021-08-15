@@ -5,6 +5,8 @@ const Transaction = require('../models/transaction');
 
 router.put('/newTransaction', (req, res) => {
     const {sender, receiver, transactionValue} = req.body;
+    console.log(req.body);
+    console.log(sender, receiver, transactionValue);
 
     if (!sender) { return res.send({error:"Provide a valid account number for sender."}); }
     if (!receiver) { return res.send({error:"Provide a valid account number for receiver."}); }
