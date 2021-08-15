@@ -9,6 +9,8 @@ const generateAccountNumber = require('../config/accountNumber');
 router.get('/accountInformations/:accountNumber', (req, res) => {
     const accountNumber = req.params.accountNumber
 
+    if (!accountNumber) { return res.send({error:"provide a valid account number."}); }
+
     CurrentAccount.findOne({"accountNumber": accountNumber}).populate("userInformations transactions").then((account) => {
         if (!account) {
             return res.send({error:"This account does not exist."});
@@ -21,6 +23,9 @@ router.get('/accountInformations/:accountNumber', (req, res) => {
 ///// POST REQUESTS /////
 router.post('/newCurrentAccount', (req, res) => {
     const {customerID,initialCredit} = req.body;
+
+    if (!customerID) { return res.send({error:"provide a valid customer ID."}); }
+    if (!initialCredit) { return res.send({error:"provide a valid initial credit."}); }
 
     // find the already existing customer
     try { Customers.findById(customerID).exec( async (error, customer) => {
