@@ -23,7 +23,7 @@ router.post('/newCurrentAccount', (req, res) => {
     const {customerID,initialCredit} = req.body;
 
     // find the already existing customer
-    try { Customers.findById(customerID).exec((error, customer) => {
+    try { Customers.findById(customerID).exec( async (error, customer) => {
         if (error) { return res.send(error); }
 
         if (!customer) {
