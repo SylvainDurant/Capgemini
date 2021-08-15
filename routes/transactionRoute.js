@@ -6,7 +6,9 @@ const Transaction = require('../models/transaction');
 router.put('/newTransaction', (req, res) => {
     const {sender, receiver, transactionValue} = req.body;
 
-    if (transactionValue < 0) {return res.send({error:"Transaction value must be greater than 0"});}
+    if (!sender) { return res.send({error:"Provide a valid account number for sender."}); }
+    if (!receiver) { return res.send({error:"Provide a valid account number for receiver."}); }
+    if (!transactionValue || (transactionValue < 0)) { return res.send({error:"Transaction value must be an integer greater than 0"}); }
 
     const makeTransaction = () => {
         // prepare the transaction
@@ -19,7 +21,7 @@ router.put('/newTransaction', (req, res) => {
         // find receiver transaction
         CurrentAccount.findOne({"accountNumber": receiver}).then( async (receiverAccount) => {
             if (!receiverAccount) {
-                return res.send({error:"This account does not exist."})
+                return res.send({error:"Receiver account does not exist."})
             } else {
                 if (sender != "initial") {
                     let valueToSend = transactionValue * -1;
@@ -49,7 +51,7 @@ router.put('/newTransaction', (req, res) => {
     if (sender != "initial"){
         CurrentAccount.findOne({"accountNumber": sender}).then((senderAccount) => {
             if (!senderAccount) {
-                return res.send({error:"This account does not exist."})
+                return res.send({error:"Sender account does not exist."})
             } else if (senderAccount.credit < transactionValue) {
                 return res.send({error:"insufficient funds"})
             } else {
